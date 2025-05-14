@@ -1,4 +1,4 @@
-interface User {
+export interface User {
     id: string;
     name: string;
     phone: string;
@@ -33,7 +33,7 @@ interface User {
 //   }
 
 // 匹配记录
-interface Match {
+export interface Match {
     id: string;
     user1Id: string;
     user2Id: string;
@@ -42,7 +42,7 @@ interface Match {
 }
 
 // 用户交互记录
-interface Interaction {
+export interface Interaction {
     id: string;
     fromUserId: string;
     toUserId: string;
@@ -51,7 +51,7 @@ interface Interaction {
 }
 
 // 消息
-interface Message {
+export interface Message {
     id: string;
     matchId: string;
     senderId: string;
@@ -63,7 +63,7 @@ interface Message {
   }
 
   // 通知
-interface Notification {
+export interface Notification {
     id: string;
     userId: string;
     type: 'match' | 'message' | 'like' | 'system';

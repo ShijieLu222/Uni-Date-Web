@@ -1,0 +1,8 @@
+.loginButton { /* Ensure this class matches the one used in your component */
+    background-color: #111;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 16px;
+  }
