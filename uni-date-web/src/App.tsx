@@ -1,5 +1,7 @@
 import React from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';import Login from './pages/LoginPage'; // 正确
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import Login from './pages/LoginPage';
+import Home from './pages/HomePage';
 
 function App() {
   const router = [
@@ -7,6 +9,10 @@ function App() {
       path: '/login',
       element: <Login />,
     },
+    {
+      path:'/home',
+      element:<Home />,
+    }
   ];
 
   return (

@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import FormInput from '../components/FormInput';
 import LoginButton from '../components/LoginButton';
+import { useNavigate } from 'react-router-dom';
 
 export default function LoginPage() {
   const [account, setAccount] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('登录信息：', { account, password });
+    navigate('/home');
   };
 
   return (
