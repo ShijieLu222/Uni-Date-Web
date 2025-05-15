@@ -5,36 +5,46 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../redux/store';
 import { setUser } from '../redux/slices/userSlice';
+import { userApi } from '../api/user';
 
 export default function LoginPage() {
   const [account, setAccount] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const user = useSelector((state: RootState) => state.user.user);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const mockUser = {
-      id: '1',
-      name: '小明', 
-      phone: '18017823680',
-      account: 'xiaoming',
-      password: '123456',
-      birthdate: '2005-01-01',
-      gender: 'male',
-      university: '清华大学',
-      major: '计算机',
-      photos: [],
-      interests: ['拉屎', '打篮球'],
-      avatar: 'https://example.com/avatar.jpg',
-      isVerified: true,
-      isVIP: false,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    dispatch(setUser(mockUser)); // 触发 action 设置 user
-    navigate('/home');
+    setError('');
+    
+    if (!account || !password) {
+      setError('账号和密码不能为空');
+      return;
+    }
+    
+    setLoading(true);
+    
+    try {
+      const response = await userApi.login({ account, password });
+      
+      if (response && response.user && response.token) {
+        localStorage.setItem('token', response.token);
+        
+        dispatch(setUser(response.user));
+        
+        navigate('/home');
+      } else {
+        setError('登录失败，请检查账号和密码');
+      }
+    } catch (error) {
+      console.error('登录出错:', error);
+      setError('登录过程中出现错误');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -63,6 +73,12 @@ export default function LoginPage() {
       >
         <h2 style={{marginBottom: 32, color: '#222', letterSpacing: 2}}>Uni-Date</h2>
         <form onSubmit={handleLogin} style={{width: '100%'}}>
+          {error && (
+            <div style={{ color: 'red', marginBottom: 10, textAlign: 'center' }}>
+              {error}
+            </div>
+          )}
+          
           <FormInput
             value={account}
             onChange={(e) => setAccount(e.target.value)}
@@ -76,7 +92,7 @@ export default function LoginPage() {
             placeholder="密码："
           />
           <div style={{marginTop: 16, width: '100%', display: 'flex', justifyContent: 'center'}}>
-            <LoginButton label="登录" />
+            <LoginButton label={loading ? "登录中..." : "登录"} disabled={loading} />
           </div>
         </form>
       </div>

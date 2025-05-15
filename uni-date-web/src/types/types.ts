@@ -85,3 +85,14 @@ export interface Notification {
 //     paymentMethod: string;
 //     amount: number;
 //   }
+
+export interface LoginResponse {
+    user: User;
+    token: string;
+}
+
+export enum UserRole {
+    FREE = 'FREE',
+    VIP = 'VIP',
+    ADMIN = 'ADMIN'
+}
