@@ -1,7 +1,10 @@
 import axios from 'axios';
 
+// 设置默认API地址，避免环境变量缺失时报错
+const API_BASE_URL = process.env.REACT_APP_API_URL;
+
 const request = axios.create({
-  baseURL: import.meta.env.VITE_API_URL, // 环境变量
+  baseURL: API_BASE_URL,
   timeout: 5000,
   headers: {
     'Content-Type': 'application/json',
@@ -21,7 +24,20 @@ request.interceptors.request.use(config => {
 request.interceptors.response.use(
   response => response.data,
   error => {
-    alert('请求出错：' + error.message);
+    console.error('API请求错误:', error);
+    // 可以在这里处理特定错误状态
+    if (error.response) {
+      // 服务器返回了错误状态码
+      console.error('状态码:', error.response.status);
+      console.error('响应数据:', error.response.data);
+      
+      // 处理401未授权错误
+      if (error.response.status === 401) {
+        localStorage.removeItem('token');
+        // 可以添加重定向到登录页的逻辑
+        // window.location.href = '/login';
+      }
+    }
     return Promise.reject(error);
   }
 );

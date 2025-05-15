@@ -450,3 +450,106 @@ export default function LoginPage() {
      - 禁用按钮防止重复提交
      - 显示加载状态
      - 展示错误信息
+
+---
+
+## 问题 15: 环境变量未定义导致的 API 请求错误
+
+* **描述**：在使用`import.meta.env.VITE_API_URL`时遇到错误：`Cannot read properties of undefined (reading 'VITE_API_URL')`。
+* **原因**：项目使用的是Create React App (react-scripts)，而不是Vite，因此环境变量访问方式不同。
+* **解决方案**：
+
+  1. **区分框架使用的环境变量格式**：
+     
+     * **Create React App**:
+       - 使用 `process.env.REACT_APP_*` 访问环境变量
+       - 环境变量必须以 `REACT_APP_` 开头
+       - 在 `.env` 文件中定义: `REACT_APP_API_URL=http://localhost:8080`
+
+     * **Vite**:
+       - 使用 `import.meta.env.VITE_*` 访问环境变量
+       - 环境变量必须以 `VITE_` 开头
+       - 在 `.env` 文件中定义: `VITE_API_URL=http://localhost:8080`
+
+  2. **修改 API 请求代码**：
+
+  ```tsx
+  // Create React App 项目中的正确方式
+  const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
+  
+  const request = axios.create({
+    baseURL: API_BASE_URL,
+    // ...其他配置
+  });
+  ```
+
+  3. **环境变量文件位置**：
+     - 环境变量文件应放在项目根目录（与package.json同级）
+     - 支持多种环境文件：`.env`、`.env.local`、`.env.development`、`.env.production`
+
+  4. **重要提示**：
+     - Create React App中，修改环境变量后需要重启开发服务器
+     - 环境变量在构建时被静态替换，不能在运行时更改
+     - 只有以`REACT_APP_`开头的变量会被暴露给前端代码
+
+---
+
+## 问题 16: 判断使用的是什么框架（Vite还是Create React App）
+
+* **描述**：在配置环境变量时，需要确定项目使用的是哪种框架。
+* **解决方案**：
+
+  1. **查看 package.json 文件**：
+     - 如果包含 `"react-scripts"`，那么使用的是 Create React App
+     - 如果包含 `"vite"`，那么使用的是 Vite
+
+  2. **检查启动命令**：
+     - Create React App 通常使用 `npm start` 或 `react-scripts start`
+     - Vite 通常使用 `npm run dev` 或 `vite`
+
+  3. **项目结构差异**：
+     - Create React App 项目通常有 `public` 文件夹和 `src` 文件夹
+     - Vite 项目通常有 `public` 文件夹和 `src` 文件夹，以及 `vite.config.js` 或 `vite.config.ts` 文件
+
+* **判断后的操作**：
+  
+  * 如果是 Create React App：
+    1. 创建 `.env` 文件，内容为 `REACT_APP_API_URL=http://localhost:8080`
+    2. 在代码中使用 `process.env.REACT_APP_API_URL` 访问
+    3. 重启服务器 `npm start`
+
+  * 如果是 Vite：
+    1. 创建 `.env` 文件，内容为 `VITE_API_URL=http://localhost:8080`
+    2. 在代码中使用 `import.meta.env.VITE_API_URL` 访问
+    3. 重启服务器 `npm run dev`
+
+---
+
+## 问题 17: 环境变量无默认值导致的错误
+
+* **描述**：使用 `const API_BASE_URL = process.env.REACT_APP_API_URL;` 时，如果环境变量未定义，会导致 API 请求失败。
+* **原因**：当环境变量不存在时，`process.env.REACT_APP_API_URL` 的值为 `undefined`，导致 axios 无法正确设置 baseURL。
+* **解决方案**：
+
+  1. **添加默认值**：
+  ```tsx
+  const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
+  ```
+
+  2. **确保环境变量文件被加载**：
+     - 检查 `.env` 文件是否在正确位置（项目根目录）
+     - 确认环境变量名称前缀正确（REACT_APP_）
+     - 重启开发服务器以加载新的环境变量
+
+  3. **使用条件判断**：
+  ```tsx
+  let API_BASE_URL = 'http://localhost:8080'; // 默认值
+  if (process.env.REACT_APP_API_URL) {
+    API_BASE_URL = process.env.REACT_APP_API_URL;
+  }
+  ```
+
+  4. **调试环境变量**：
+  ```tsx
+  console.log('环境变量:', process.env);
+  ```
