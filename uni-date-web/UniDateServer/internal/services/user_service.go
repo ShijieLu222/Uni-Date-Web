@@ -5,10 +5,10 @@ import (
 	"log"
 	"time"
 
+	"github.com/ShijieLu222/uni-date-server/config"
+	"github.com/ShijieLu222/uni-date-server/internal/models"
+	"github.com/ShijieLu222/uni-date-server/internal/repositories"
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/yourusername/uni-date-server/config"
-	"github.com/yourusername/uni-date-server/internal/models"
-	"github.com/yourusername/uni-date-server/internal/repositories"
 )
 
 var (

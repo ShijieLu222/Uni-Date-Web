@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/ShijieLu222/uni-date-server/api/controllers"
+	"github.com/ShijieLu222/uni-date-server/api/routes"
+	"github.com/ShijieLu222/uni-date-server/config"
+	"github.com/ShijieLu222/uni-date-server/internal/repositories"
+	"github.com/ShijieLu222/uni-date-server/internal/repositories/db"
+	"github.com/ShijieLu222/uni-date-server/internal/services"
 	"github.com/gin-gonic/gin"
-	"github.com/yourusername/uni-date-server/api/controllers"
-	"github.com/yourusername/uni-date-server/api/routes"
-	"github.com/yourusername/uni-date-server/config"
-	"github.com/yourusername/uni-date-server/internal/repositories"
-	"github.com/yourusername/uni-date-server/internal/repositories/db"
-	"github.com/yourusername/uni-date-server/internal/services"
 )
 
 func main() {

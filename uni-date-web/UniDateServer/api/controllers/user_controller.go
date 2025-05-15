@@ -3,9 +3,9 @@ package controllers
 import (
 	"net/http"
 
+	"github.com/ShijieLu222/uni-date-server/internal/models"
+	"github.com/ShijieLu222/uni-date-server/internal/services"
 	"github.com/gin-gonic/gin"
-	"github.com/yourusername/uni-date-server/internal/models"
-	"github.com/yourusername/uni-date-server/internal/services"
 )
 
 // UserController 用户控制器接口

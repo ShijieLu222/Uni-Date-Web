@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/yourusername/uni-date-server/internal/models"
-	"github.com/yourusername/uni-date-server/internal/repositories/db"
+	"github.com/ShijieLu222/uni-date-server/internal/models"
+	"github.com/ShijieLu222/uni-date-server/internal/repositories/db"
 	"gorm.io/gorm"
 )
 

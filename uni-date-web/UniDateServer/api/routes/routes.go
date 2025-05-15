@@ -1,10 +1,10 @@
 package routes
 
 import (
+	"github.com/ShijieLu222/uni-date-server/api/controllers"
+	"github.com/ShijieLu222/uni-date-server/api/middleware"
+	"github.com/ShijieLu222/uni-date-server/config"
 	"github.com/gin-gonic/gin"
-	"github.com/yourusername/uni-date-server/api/controllers"
-	"github.com/yourusername/uni-date-server/api/middleware"
-	"github.com/yourusername/uni-date-server/config"
 )
 
 // SetupRoutes 设置API路由

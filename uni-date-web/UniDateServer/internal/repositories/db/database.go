@@ -3,8 +3,8 @@ package db
 import (
 	"fmt"
 
-	"github.com/yourusername/uni-date-server/config"
-	"github.com/yourusername/uni-date-server/internal/models"
+	"github.com/ShijieLu222/uni-date-server/config"
+	"github.com/ShijieLu222/uni-date-server/internal/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"

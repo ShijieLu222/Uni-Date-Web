@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/ShijieLu222/uni-date-server/config"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/yourusername/uni-date-server/config"
 )
 
 // AuthMiddleware JWT认证中间件

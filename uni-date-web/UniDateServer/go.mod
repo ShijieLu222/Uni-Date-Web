@@ -1,4 +1,4 @@
-module github.com/yourusername/uni-date-server
+module github.com/ShijieLu222/uni-date-server
 
 go 1.24.3
 
