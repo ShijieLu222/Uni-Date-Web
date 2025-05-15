@@ -553,3 +553,161 @@ export default function LoginPage() {
   ```tsx
   console.log('环境变量:', process.env);
   ```
+
+---
+
+## 问题 18: PostgreSQL数据库连接配置错误
+
+* **描述**：后端尝试连接PostgreSQL数据库时失败，报错"用户不存在"。
+* **原因**：配置中的数据库用户名和实际PostgreSQL设置的用户名不匹配。
+* **解决方案**：
+  1. 检查PostgreSQL数据库的用户名和密码设置
+  2. 修改后端配置文件中的数据库连接参数，确保用户名、密码、主机、端口和数据库名称都正确
+  3. 在PostgreSQL中创建对应的用户和数据库（如果不存在）
+
+```go
+// 正确的数据库连接配置
+db, err := gorm.Open(postgres.Open(
+    "host=localhost user=postgres password=yourpassword dbname=unidate port=5432 sslmode=disable TimeZone=Asia/Shanghai"
+), &gorm.Config{})
+```
+
+---
+
+## 问题 19: 用户登录密码验证失败
+
+* **描述**：用户使用正确的账号密码无法登录，后端验证始终失败。
+* **原因**：密码存储使用了哈希加密，但比较时没有使用正确的验证方法。
+* **解决方案**：
+  1. 初期测试阶段，先使用明文密码比较简化开发和测试
+  2. 后续实现时，使用`bcrypt`等加密库正确验证密码哈希
+
+```go
+// 初期测试时的简化实现（仅用于开发）
+if user.Password != password {
+    c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
+    return
+}
+
+// 正确的密码验证实现
+if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
+    c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
+    return
+}
+```
+
+---
+
+## 问题 20: 前端路由404错误
+
+* **描述**：在部署后端服务器时，前端路由访问返回404错误。
+* **原因**：后端服务器没有处理前端路由请求，导致无法匹配到路由。
+* **解决方案**：
+  1. 在后端添加一个捕获所有未匹配路由的处理器，将请求重定向到前端入口文件
+
+```go
+// 添加根路径路由处理
+router.NoRoute(func(c *gin.Context) {
+    // 对于API请求返回404
+    if strings.HasPrefix(c.Request.URL.Path, "/api/") {
+        c.JSON(http.StatusNotFound, gin.H{"error": "API endpoint not found"})
+        return
+    }
+    
+    // 其他请求重定向到前端路由
+    c.File("./public/index.html")
+})
+```
+
+---
+
+## 问题 21: Axios请求拦截器配置问题
+
+* **描述**：API请求发出后，服务器接收到的请求没有包含Authorization头部的JWT令牌。
+* **原因**：Axios拦截器中设置请求头的代码逻辑有误。
+* **解决方案**：
+  1. 修改Axios请求拦截器，确保正确设置Authorization头部
+
+```tsx
+// 修正后的请求拦截器
+request.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token && config.headers) {  // 添加对config.headers的检查
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+```
+
+---
+
+## 问题 22: 前后端数据格式不匹配
+
+* **描述**：前端登录提交的数据格式与后端API期望的格式不一致。
+* **原因**：前端发送的是`{account: "...", password: "..."}`，而后端期望`{username: "...", password: "..."}`。
+* **解决方案**：
+  1. 统一前后端的参数命名，选择一种命名约定并在两端保持一致
+  2. 或者在API调用前对数据进行转换，适配后端期望的格式
+
+```tsx
+// 前端适配后端API期望的格式
+const handleLogin = async () => {
+  try {
+    // 转换参数名称以匹配后端期望
+    const result = await userApi.login({
+      username: account,  // 从account转为username
+      password: password
+    });
+    // 处理登录响应...
+  } catch (error) {
+    // 错误处理...
+  }
+};
+```
+
+---
+
+## 问题 23: JWT验证失败
+
+* **描述**：前端已获取JWT令牌，但在后续请求中服务器返回401未授权错误。
+* **原因**：JWT令牌格式不正确，或者后端验证JWT时的密钥不匹配。
+* **解决方案**：
+  1. 检查后端生成JWT的代码和密钥
+  2. 确保前端正确存储完整的JWT令牌（不要丢失头部或尾部）
+  3. 验证请求头中的Authorization格式是否为`Bearer <token>`
+
+```go
+// 后端JWT生成示例
+token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+tokenString, err := token.SignedString([]byte(secretKey))
+
+// 前端JWT存储和使用示例
+localStorage.setItem('token', response.token);
+// 在请求拦截器中
+config.headers.Authorization = `Bearer ${token}`;
+```
+
+---
+
+## 问题 24: 终端停止运行后端服务
+
+* **描述**：需要知道如何在终端中停止正在运行的后端服务。
+* **解决方案**：
+  1. 对于大多数终端，可以使用`Ctrl+C`组合键来发送中断信号，停止正在运行的程序
+  2. 如果程序在后台运行，可以使用`ps`命令查找进程ID，然后使用`kill`命令终止进程
+
+```bash
+# 查找运行中的Go服务进程
+ps aux | grep go
+
+# 终止指定进程ID的服务
+kill <pid>
+
+# 强制终止（如果普通终止不生效）
+kill -9 <pid>
+```

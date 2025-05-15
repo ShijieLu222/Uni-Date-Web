@@ -28,15 +28,26 @@ export default function LoginPage() {
     setLoading(true);
     
     try {
+      console.log("开始登录请求, 账号:", account, "密码:", password);
       const response = await userApi.login({ account, password });
+      console.log("登录结果:", response);
       
-      if (response && response.user && response.token) {
-        localStorage.setItem('token', response.token);
+      if (response) {
+        console.log("响应数据:", response);
+        console.log("token:", response.token);
+        console.log("user:", response.user);
         
-        dispatch(setUser(response.user));
-        
-        navigate('/home');
+        if (response.token && response.user) {
+          console.log("保存token和user信息");
+          localStorage.setItem('token', response.token);
+          dispatch(setUser(response.user));
+          navigate('/home');
+        } else {
+          console.log("响应中缺少token或user数据");
+          setError('登录成功但返回数据不完整');
+        }
       } else {
+        console.log("登录响应为空");
         setError('登录失败，请检查账号和密码');
       }
     } catch (error) {

@@ -9,12 +9,11 @@ server:
 
 # 数据库连接配置
 database:
-  driver: postgres          # 数据库类型：目前支持postgres(PostgreSQL)
   host: localhost           # 数据库服务器地址
   port: 5432                # PostgreSQL默认端口
-  username: postgres        # 数据库用户名
-  password: password        # 数据库密码（生产环境建议使用环境变量或密钥管理系统）
-  name: uni_date            # 数据库名称
+  user: ken                 # 数据库用户名
+  password:                 # 数据库密码（生产环境建议使用环境变量或密钥管理系统）
+  dbname: uni-date          # 数据库名称 
   sslmode: disable          # SSL连接模式：disable(禁用)、require(必需)、verify-ca(验证CA)、verify-full(完全验证)
   # max_open_conns: 10      # 可选：最大打开连接数
   # max_idle_conns: 5       # 可选：最大空闲连接数
@@ -33,7 +32,7 @@ redis:
 # 用于生成和验证用户身份令牌
 jwt:
   secret: your_jwt_secret_key  # JWT签名密钥（生产环境必须更改为强密钥并妥善保管）
-  expiration: 24h              # 令牌有效期，格式：数字+单位(s秒,m分钟,h小时)
+  expiresIn: 24h              # 令牌有效期，格式：数字+单位(s秒,m分钟,h小时)
   # refresh_expiration: 168h   # 可选：刷新令牌有效期，默认为7天
 
 # CORS跨域资源共享配置

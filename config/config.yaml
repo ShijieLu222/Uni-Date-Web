@@ -1,17 +1,19 @@
 # Server configuration: controls how your backend runs.
 server:
-  port: 8080         # The port your backend server listens on. 8080 is common for backend; frontend often uses 3000.
+  port: "8080"
   mode: debug        # The running mode: 'debug' for development, 'release' for production, 'test' for testing.
+  readTimeout: 10s
+  writeTimeout: 10s
 
 # Database configuration: tells your backend how to connect to your PostgreSQL database.
 database:
   driver: postgres   # The type of database. Here, it's PostgreSQL.
-  host: localhost    # The address of your database server. 'localhost' means your own computer.
-  port: 5432         # The default port for PostgreSQL.
-  username: postgres # Your database username.
-  password: password # Your database password. (Change this to something secure in production!)
-  name: uni_date     # The name of your database.
-  sslmode: disable   # SSL mode for the database connection. 'disable' is fine for local development.
+  host: "localhost"    # The address of your database server. 'localhost' means your own computer.
+  port: "5432"         # The default port for PostgreSQL.
+  user: "ken"       # Your database username.
+  password: ""
+  dbname: "uni-date" # The name of your database.
+  sslmode: "disable"   # SSL mode for the database connection. 'disable' is fine for local development.
 
 # Redis configuration: settings for connecting to your Redis cache.
 redis:
@@ -22,8 +24,8 @@ redis:
 
 # JWT configuration: controls how user login tokens are created and validated.
 jwt:
-  secret: your_jwt_secret_key # Secret key for signing JWT tokens. Change this to something secure!
-  expiration: 24h             # How long a login token is valid. Here, 24 hours.
+  secret: "uni-date-app-secret-key-change-in-production"
+  expiresIn: 168h # 7天
 
 # CORS configuration: controls which frontend addresses can access your backend API.
 cors:

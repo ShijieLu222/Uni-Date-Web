@@ -17,8 +17,10 @@ export const userApi = {
   // 登录
   login: async (params: LoginParams): Promise<LoginResponse | null> => {
     try {
-      const { data } = await request.post('/api/auth/login', params);
-      return data;
+      console.log('发送登录请求:', params);
+      const response = await request.post('/api/auth/login', params);
+      console.log('登录响应:', response);
+      return response.data;  // 从response.data中获取数据
     } catch (error) {
       console.error('Login failed:', error);
       return null;
@@ -28,8 +30,8 @@ export const userApi = {
   // 注册
   register: async (params: RegisterParams): Promise<LoginResponse | null> => {
     try {
-      const { data } = await request.post('/api/auth/register', params);
-      return data;
+      const response = await request.post('/api/auth/register', params);
+      return response.data;  // 从response.data中获取数据
     } catch (error) {
       console.error('Registration failed:', error);
       return null;
@@ -39,8 +41,8 @@ export const userApi = {
   // 获取用户信息
   getUserProfile: async (): Promise<User | null> => {
     try {
-      const { data } = await request.get('/api/user/profile');
-      return data;
+      const response = await request.get('/api/user/profile');
+      return response.data;  // 从response.data中获取数据
     } catch (error) {
       console.error('Failed to fetch user profile:', error);
       return null;
@@ -50,8 +52,8 @@ export const userApi = {
   // 更新用户信息
   updateUserProfile: async (profile: Partial<User>): Promise<User | null> => {
     try {
-      const { data } = await request.put('/api/user/profile', profile);
-      return data;
+      const response = await request.put('/api/user/profile', profile);
+      return response.data;  // 从response.data中获取数据
     } catch (error) {
       console.error('Failed to update user profile:', error);
       return null;

@@ -22,7 +22,7 @@ request.interceptors.request.use(config => {
 
 // 响应拦截器（统一处理错误）
 request.interceptors.response.use(
-  response => response.data,
+  response => response,  // 直接返回整个响应对象，不要从response.data中提取
   error => {
     console.error('API请求错误:', error);
     // 可以在这里处理特定错误状态

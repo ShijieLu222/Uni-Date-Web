@@ -1,46 +1,107 @@
-# Getting Started with Create React App
+# Uni-Date 校园交友应用
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Uni-Date是一个专为大学生设计的校园交友应用，帮助同校或者不同学校的学生互相认识、交流和约会。
 
-## Available Scripts
+## 系统架构
 
-In the project directory, you can run:
+本系统使用以下技术栈:
 
-### `npm start`
+- 前端: React, Redux, TypeScript, Axios
+- 后端: Go, Gin框架
+- 数据库: PostgreSQL
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## 项目结构
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+```
+uni-date-web/
+├── src/                # 前端源码
+│   ├── api/            # API接口
+│   ├── redux/          # Redux状态管理
+│   ├── pages/          # 页面组件
+│   ├── components/     # 可复用组件
+│   └── types/          # TypeScript类型定义
+└── UniDateServer/      # 后端服务
+    ├── api/            # API控制器和路由
+    ├── config/         # 配置文件
+    ├── internal/       # 内部包
+    │   ├── models/     # 数据模型
+    │   ├── repositories/ # 数据存储层
+    │   └── services/   # 业务逻辑层
+    └── scripts/        # 脚本工具
+```
 
-### `npm test`
+## 环境要求
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Node.js 18.x+
+- Go 1.24+
+- PostgreSQL 14+
 
-### `npm run build`
+## 启动指南
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 1. 准备数据库
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+确保 PostgreSQL 已经启动并运行:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+# macOS
+brew services start postgresql
 
-### `npm run eject`
+# Linux
+sudo systemctl start postgresql
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### 2. 启动后端服务
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```bash
+cd UniDateServer
+chmod +x ./scripts/start.sh
+./scripts/start.sh
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+这个脚本会自动:
+- 检查数据库是否存在，如果不存在则创建
+- 编译和启动Go后端服务
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+后端服务将在 http://localhost:8080 运行。
 
-## Learn More
+### 3. 配置前端 API URL
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+在前端项目根目录创建 `.env` 文件:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```
+REACT_APP_API_URL=http://localhost:8080
+```
+
+### 4. 启动前端应用
+
+```bash
+npm install
+npm start
+```
+
+前端应用将在 http://localhost:3000 运行。
+
+## API文档
+
+### 认证API
+
+- POST /api/auth/register - 用户注册
+- POST /api/auth/login - 用户登录
+- POST /api/auth/logout - 用户登出
+
+### 用户API (需要认证)
+
+- GET /api/user/profile - 获取用户资料
+- PUT /api/user/profile - 更新用户资料
+
+## 开发注意事项
+
+1. 后端使用 JWT 进行认证，确保在请求头中加入 `Authorization: Bearer {token}`
+2. 数据库使用 PostgreSQL，确保已正确配置连接参数
+3. 确保前端 API 请求使用了正确的 URL 前缀
+
+## 故障排除
+
+1. 如果数据库连接失败，检查 UniDateServer/config/config.yaml 中的数据库配置
+2. 如果前端 API 请求失败，确保 .env 文件中的 REACT_APP_API_URL 设置正确
+3. 前后端跨域问题已在后端通过 CORS 中间件解决
